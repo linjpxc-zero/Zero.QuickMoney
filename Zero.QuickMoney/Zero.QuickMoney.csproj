@@ -6,7 +6,4 @@
     <Authors>linjpxc</Authors>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
 </Project>
