@@ -1,9 +1,11 @@
-﻿namespace Zero.QuickMoney
+﻿using System;
+
+namespace Zero.QuickMoney
 {
     /// <summary>
     /// Define a <see cref="IMoney"/> with a specific <see cref="ICurrency"/>.
     /// </summary>
-    public interface IMoney
+    public interface IMoney : IFormattable
     {
         /// <summary>
         /// Get a value representing the amount.
