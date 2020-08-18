@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 
@@ -9,6 +10,12 @@ namespace Zero.QuickMoney
     {
         private const int CodeLength = 3;
 
+        /// <summary>
+        /// Convert the three-letter ISO-4217 currency code to the equivalent <see cref="CurrencyInfo"/>, a return value indicating whether it was successful.
+        /// </summary>
+        /// <param name="code">The code.</param>
+        /// <param name="result">The result.</param>
+        /// <returns></returns>
         public static bool TryFromCode(string code, out CurrencyInfo result)
         {
             result = default;
@@ -26,6 +33,12 @@ namespace Zero.QuickMoney
             return !string.IsNullOrWhiteSpace(result.Code);
         }
 
+        /// <summary>
+        /// Convert the three-digit ISO-4217 currency code to the equivalent <see cref="CurrencyInfo"/>, a return value indicating whether it was successful.
+        /// </summary>
+        /// <param name="numeric">The numeric.</param>
+        /// <param name="result">The result.</param>
+        /// <returns></returns>
         public static bool TryFromNumeric(string numeric, out CurrencyInfo result)
         {
             result = default;
@@ -42,6 +55,12 @@ namespace Zero.QuickMoney
             return !string.IsNullOrWhiteSpace(result.Code);
         }
 
+        /// <summary>
+        /// Obtain relevant <currency> information from <see cref="RegionInfo"/>, a return value indicating whether it was successful.
+        /// </summary>
+        /// <param name="region">The region.</param>
+        /// <param name="result">The result.</param>
+        /// <returns></returns>
         public static bool TryFromRegion(RegionInfo region, out CurrencyInfo result)
         {
             result = default;
@@ -52,6 +71,13 @@ namespace Zero.QuickMoney
             return TryFromCode(region.ISOCurrencySymbol, out result);
         }
 
+        /// <summary>
+        /// Get relevant <see cref="CurrencyInfo"/> information from the specified <see cref="CultureInfo"/>, a return value indicating whether it was successful.
+        /// </summary>
+        /// <param name="culture">The culture.</param>
+        /// <param name="result">The result.</param>
+        /// <returns></returns>
+        [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "<挂起>")]
         public static bool TryFromCulture(CultureInfo culture, out CurrencyInfo result)
         {
             result = default;
@@ -77,6 +103,12 @@ namespace Zero.QuickMoney
             }
         }
 
+        /// <summary>
+        /// Convert the three-letter ISO-4217 currency code to the equivalent <see cref="CurrencyInfo"/>.
+        /// </summary>
+        /// <param name="code">The code.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException">The <{code}> is not a valid currency code. - code</exception>
         public static CurrencyInfo FromCode(string code)
         {
             if (TryFromCode(code, out var result))
@@ -86,6 +118,12 @@ namespace Zero.QuickMoney
             throw new ArgumentException($"The <{code}> is not a valid currency code.", nameof(code));
         }
 
+        /// <summary>
+        /// Convert the three-digit ISO-4217 currency code to the equivalent <see cref="CurrencyInfo"/>.
+        /// </summary>
+        /// <param name="numeric">The numeric.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException">The <{numeric}> is not a valid currency numeric. - Code</exception>
         public static CurrencyInfo FromNumeric(string numeric)
         {
             if (TryFromNumeric(numeric, out var result))
@@ -95,6 +133,13 @@ namespace Zero.QuickMoney
             throw new ArgumentException($"The <{numeric}> is not a valid currency numeric.", nameof(Code));
         }
 
+        /// <summary>
+        /// Obtain relevant <currency> information from <see cref="RegionInfo"/>.
+        /// </summary>
+        /// <param name="region">The region.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">region</exception>
+        /// <exception cref="Zero.QuickMoney.CurrencyException">Could not find currency information for the specified region.</exception>
         public static CurrencyInfo FromRegion(RegionInfo region)
         {
             if (region == null)
@@ -108,6 +153,18 @@ namespace Zero.QuickMoney
             throw new CurrencyException("Could not find currency information for the specified region.");
         }
 
+        /// <summary>
+        /// Get relevant <see cref="CurrencyInfo"/> information from the specified <see cref="CultureInfo"/>.
+        /// </summary>
+        /// <param name="culture">The culture.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">culture</exception>
+        /// <exception cref="ArgumentException">
+        /// Culture {culture.Name} is a neutral culture.
+        /// or
+        /// Culture name is empty.
+        /// </exception>
+        /// <exception cref="Zero.QuickMoney.CurrencyException">Could not find currency information for the specified culture.</exception>
         public static CurrencyInfo FromCulture(CultureInfo culture)
         {
             if (culture == null)
@@ -129,6 +186,10 @@ namespace Zero.QuickMoney
             throw new CurrencyException("Could not find currency information for the specified culture.");
         }
 
+        /// <summary>
+        /// Gets the currencies.
+        /// </summary>
+        /// <returns></returns>
         public static IEnumerable<CurrencyInfo> GetCurrencies()
             => currencies.AsEnumerable();
 

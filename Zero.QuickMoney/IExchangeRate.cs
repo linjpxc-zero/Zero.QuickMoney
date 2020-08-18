@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace Zero.QuickMoney
 {
     /// <summary>
@@ -50,7 +51,7 @@ namespace Zero.QuickMoney
         new C QuoteCurrency { get; }
 
         /// <summary>
-        /// Converts the specified <see cref="IMoney">.
+        /// Converts the specified <see cref="M">.
         /// </summary>
         /// <param name="money">The money.</param>
         /// <returns>The converted money.</returns>

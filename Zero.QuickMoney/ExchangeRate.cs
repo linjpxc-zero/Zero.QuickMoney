@@ -3,8 +3,28 @@ using System.Collections.Generic;
 
 namespace Zero.QuickMoney
 {
+    /// <summary>
+    /// Convert one type of <see cref="Money"/> to another type of <see cref="Money"/>.
+    /// </summary>
+    /// <seealso cref="Zero.QuickMoney.IExchangeRate{Zero.QuickMoney.CurrencyInfo, Zero.QuickMoney.Money}" />
+    /// <seealso cref="System.IEquatable{Zero.QuickMoney.ExchangeRate}" />
     public readonly struct ExchangeRate : IExchangeRate<CurrencyInfo, Money>, IEquatable<ExchangeRate>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExchangeRate"/> struct.
+        /// </summary>
+        /// <param name="baseCurrency">The base currency.</param>
+        /// <param name="quoteCurrency">The quote currency.</param>
+        /// <param name="rate">The rate.</param>
+        /// <exception cref="ArgumentException">
+        /// Is not a valid currency. - baseCurrency
+        /// or
+        /// Is not a valid currency. - quoteCurrency
+        /// or
+        /// The base currency cannot be the same as the quote currency.
+        /// or
+        /// Rate must be greater than zero.
+        /// </exception>
         public ExchangeRate(CurrencyInfo baseCurrency, CurrencyInfo quoteCurrency, decimal rate)
         {
             if (string.IsNullOrEmpty(baseCurrency.Code))
@@ -29,16 +49,38 @@ namespace Zero.QuickMoney
             this.Rate = rate;
         }
 
+        /// <summary>
+        /// Get a value representing the base currency.
+        /// </summary>
         public CurrencyInfo BaseCurrency { get; }
 
+        /// <summary>
+        /// Get a value representing the quote currency.
+        /// </summary>
         public CurrencyInfo QuoteCurrency { get; }
 
+        /// <summary>
+        /// Get a value representing the exchange rate.
+        /// </summary>
         public decimal Rate { get; }
 
+        /// <summary>
+        /// Get a value representing the base currency.
+        /// </summary>
         ICurrency IExchangeRate.BaseCurrency => this.BaseCurrency;
 
+        /// <summary>
+        /// Get a value representing the quote currency.
+        /// </summary>
         ICurrency IExchangeRate.QuoteCurrency => this.QuoteCurrency;
 
+        /// <summary>
+        /// Converts the specified <see cref="Money">.
+        /// </summary>
+        /// <param name="money"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException">The currency of money should be the same as the base currency or quote currency.</exception>
+        /// <!-- Badly formed XML comment ignored for member "M:Zero.QuickMoney.IExchangeRate`2.Convert(`1)" -->
         public Money Convert(Money money)
         {
             if (money.Currency == this.BaseCurrency)
@@ -52,6 +94,13 @@ namespace Zero.QuickMoney
             throw new ArgumentException("The currency of money should be the same as the base currency or quote currency.");
         }
 
+        /// <summary>
+        /// Converts the specified <see cref="Money">.
+        /// </summary>
+        /// <param name="money">The money.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">money</exception>
+        /// <exception cref="ArgumentException">Not for {nameof(Money)}.</exception>
         IMoney IExchangeRate.Convert(IMoney money)
         {
             if (money == null)
@@ -65,6 +114,13 @@ namespace Zero.QuickMoney
             throw new ArgumentException($"Not for {nameof(Money)}.");
         }
 
+        /// <summary>
+        /// Indicates whether the current object is equal to another object of the same type.
+        /// </summary>
+        /// <param name="other">An object to compare with this object.</param>
+        /// <returns>
+        ///   <see langword="true" /> if the current object is equal to the <paramref name="other" /> parameter; otherwise, <see langword="false" />.
+        /// </returns>
         public bool Equals(ExchangeRate other)
         {
             return this.BaseCurrency == other.BaseCurrency
@@ -72,6 +128,13 @@ namespace Zero.QuickMoney
                 && this.Rate == other.Rate;
         }
 
+        /// <summary>
+        /// Determines whether the specified <see cref="System.Object" />, is equal to this instance.
+        /// </summary>
+        /// <param name="obj">The <see cref="System.Object" /> to compare with this instance.</param>
+        /// <returns>
+        ///   <c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
         public override bool Equals(object obj)
         {
             if (obj == null)
@@ -85,6 +148,12 @@ namespace Zero.QuickMoney
             return false;
         }
 
+        /// <summary>
+        /// Returns a hash code for this instance.
+        /// </summary>
+        /// <returns>
+        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
+        /// </returns>
         public override int GetHashCode()
         {
             int hashCode = -817766104;
@@ -94,9 +163,22 @@ namespace Zero.QuickMoney
             return hashCode;
         }
 
+        /// <summary>
+        /// Converts to string.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.String" /> that represents this instance.
+        /// </returns>
         public override string ToString()
             => $"{this.BaseCurrency}/{this.QuoteCurrency} {this.Rate}";
 
+        /// <summary>
+        /// Convert the specified string to the equivalent <see cref="ExchangeRate"/>.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">value</exception>
+        /// <exception cref="FormatException">Is not a valid exchange rate format.</exception>
         public static ExchangeRate Parse(string value)
         {
             if (value == null)
@@ -110,6 +192,12 @@ namespace Zero.QuickMoney
             throw new FormatException("Is not a valid exchange rate format.");
         }
 
+        /// <summary>
+        /// Convert the specified string to the equivalent <see cref="ExchangeRate"/>, a return value indicating whether it was successful.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="result">The result.</param>
+        /// <returns></returns>
         public static bool TryParse(string value, out ExchangeRate result)
         {
             result = default;
