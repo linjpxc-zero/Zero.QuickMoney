@@ -5,6 +5,7 @@ namespace Zero.QuickMoney
     /// <summary>
     /// Basic currency information.
     /// </summary>
+    /// <seealso cref="IEquatable{ICurrency}"/>
     public interface ICurrency : IEquatable<ICurrency>
     {
         /// <summary>
