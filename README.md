@@ -1,39 +1,62 @@
 # Zero.QuickMoney
 
-#### 介绍
-{**以下是码云平台说明，您可以替换此简介**
-码云是 OSCHINA 推出的基于 Git 的代码托管平台（同时支持 SVN）。专为开发者提供稳定、高效、安全的云端软件开发协作平台
-无论是个人、团队、或是企业，都能够用码云实现代码托管、项目管理、协作开发。企业项目请看 [https://gitee.com/enterprises](https://gitee.com/enterprises)}
+# 说明
 
-#### 软件架构
-软件架构说明
+Zero.QuockMoney 提供一个表示货币与金额的类库，旨在提供一个统一的货币接口。该库有三大核心接口：
 
+- ICurrency : ` 描述一个具体的货币信息 `
+- IMoney : ` 描述一个确定货币 ICurrency 的金额 `
+- IExchangeRate : ` 提供一个将不同货币相互转换的接口 `
 
-#### 安装教程
+三大核心接口都有对应的默认实现 CurrencyInfo，Money 和 ExchangeRate。
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+# 三大对象基本用法
 
-#### 使用说明
+## CyrrencyInfo
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+```C#
+// 获取 ISO-4217 货币信息
+var currency = CurrencyInfo.FromCode("CNY");
+var blRet = CurrencyInfo.TryFromCode("CNY", out var currency);
 
-#### 参与贡献
+// 获取当前的货币信息
+var currency = CurrencyInfo.CurrentCurrency;
 
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
+// 通过 ISO-4217 的数字编码获取货币信息
+var currency = CurrencyInfo.FromNumeric("156");
+var blRet = CurrencyInfo.TryFromNumeric("156", out var currency);
 
+// 通过指定区域信息，获取货币信息
+var currency = CurrencyInfo.FromRegion(new RegionInfo("zh-CN"));
+var blRet = CurrencyInfo.TryFromRegion(new RegionInfo("zh-CN", out var currency));
 
-#### 码云特技
+// 通过指定的文化信息，获取货币信息
+var currency = CurrencyInfo.FromCulture(CultureInfo.CurrencyCulture);
+var blRet = CurrencyInfo.TryFromCulture(CultureInfo.CurrencyCulture, out var currency);
+```
 
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  码云官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解码云上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是码云最有价值开源项目，是码云综合评定出的优秀开源项目
-5.  码云官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  码云封面人物是一档用来展示码云会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+## Money
+
+```C#
+// 使用当前货币信息 CurrencyInfo.CurrentCurrency 创建金额
+var money = (Money)100M;
+var money = Money.Parse("100");
+
+// 创建指定货币信息的金额
+var money = Money.Parse("CNY100");
+var money = Money.Parse("CNY 100");
+var money = Money.Parse("CNY ¥100");
+
+// Money 可以当作一个 decimal 类型来使用，支持加减乘除等基本运算
+var money1 = (Money)1;
+var money2 = (Money)2;
+var money = money1 + money2; // money: 3
+```
+
+## ExchangeRate
+
+```C#
+// 创建汇率转换对象
+var exchangeRate = ExchangeRate.Parse("CNYUSD 7");
+var exchangeRate = ExchangeRate.Parse("CNY/USD 7");
+```
