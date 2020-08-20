@@ -8,8 +8,12 @@
     <Owners>linjpxc</Owners>
     <PackageProjectUrl>https://github.com/linjpxc-zero/Zero.QuickMoney</PackageProjectUrl>
     <Title>Zero.QuickMoney</Title>
+    <ReleaseVersion>0.1.1</ReleaseVersion>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType></DebugType>
+  </PropertyGroup>
   <ItemGroup>
     <Folder Include="Extensions\" />
   </ItemGroup>
